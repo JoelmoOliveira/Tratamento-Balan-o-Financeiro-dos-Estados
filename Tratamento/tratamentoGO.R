@@ -9,19 +9,17 @@ exemploGO <- read_excel("D:/Joelmo/COIND/Dados Dispêndios Estados/
                         100 - RelacaoAnexo11Resumo - 1a12_2019 editada.xlsx",
                          col_names = FALSE, skip = 10)
 
-
 # create function
-read_excel_PR19 <- function() {
-  x <- read_excel(path = "D:/Joelmo/COIND/Dados Dispêndios Estados/GO",
+read_excel_GO19 <- function(nomearq) {
+  x <- read_excel(path = nomearq,
                   col_names = FALSE, skip = 10)
 }
 
 temp <- list.files(pattern="*.xlsx")
 
-my_work <- lapply(temp, read_excel_PR19)
+my_work <- lapply(temp, read_excel_GO19)
 
-
-str(myfiles)
+my_work[[1]][1,2]
 
 
 
