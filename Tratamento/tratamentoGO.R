@@ -3,25 +3,10 @@ library(dplyr)
 library(stringr)
 library(readxl)
 
-
 exemploGO <- read_excel("D:/Joelmo/COIND/Dados Dispêndios Estados/
                         Arquivos GO/
                         100 - RelacaoAnexo11Resumo - 1a12_2019 editada.xlsx",
                          col_names = FALSE, skip = 10)
-
-# create function
-read_excel_GO19 <- function(nomearq) {
-  x <- read_excel(path = nomearq,
-                  col_names = FALSE, skip = 10)
-}
-
-temp <- list.files(pattern="*.xlsx")
-
-my_work <- lapply(temp, read_excel_GO19)
-
-my_work[[1]][1,2]
-
-
 
 exemploGO.rec<-exemploGO %>% 
   select(...1,
@@ -47,5 +32,55 @@ exemploGO.rec<-exemploGO.rec %>%
          descricao.acao,
          valor.empenhado)
 
-
 write.csv(exemploGO.rec,"exemploGO.csv")
+
+##################################################################################
+### Função Leitura Planilhas Goiás 2019 ##########################################
+##################################################################################
+
+read_excel_GO19 <- function(nomearq) {
+  x <- read_excel(path = nomearq,
+                  col_names = FALSE, skip = 10)
+}
+
+###################################################################################
+###### Leitura de todas as planilhas ##############################################
+###################################################################################
+
+temp <- list.files(pattern="*.xlsx")
+
+relGO19 <- lapply(temp, read_excel_GO19)
+
+###################################################################################
+###################################################################################
+
+length(relGO19)  ##### Número de planilhas/tibbles na lista
+
+((dim(relGO19[[1]])[1])-2) #### Número de linhas na planilha/tibble
+
+dim(relGO19[[1]])[2]  #### Número de colunas na planilha/tibble
+
+
+a<-c(relGO19[[1]][,1],
+     relGO19[[1]][,2],
+     relGO19[[1]][,17])
+
+list_data<-list(tibble(`codigo`=a$...1,
+                          `descricao.acao`=a$...2,
+                          `valor.empenhado`=a$...17))
+
+rm(a)
+
+for (i in 2:length(relGO19)) {
+  
+ a<-c(relGO19[[i]][,1],
+  relGO19[[i]][,2],
+  relGO19[[i]][,17])
+ 
+ list_data[i]<-list(tibble(`codigo`=a$...1,
+             `descricao.acao`=a$...2,
+             `valor.empenhado`=a$...17))
+      rm(a)
+  }
+
+
